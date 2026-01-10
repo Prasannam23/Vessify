@@ -1,0 +1,201 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// Better Auth Models - Core Authentication
+// ============================================================================
+
+model User {
+  id            String     @id @default(cuid())
+  name          String?
+  email         String     @unique
+  emailVerified Boolean    @default(false)
+  password      String
+  image         String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  // Relations
+  accounts      Account[]
+  sessions      Session[]
+  verification VerificationToken[]
+  twoFactors    TwoFactorAuthentication[]
+
+  // Multi-tenancy: User belongs to organizations
+  organizations OrganizationMember[]
+  transactions  Transaction[]
+
+  @@index([email])
+  @@map("user")
+}
+
+model Account {
+  id              String  @id @default(cuid())
+  userId          String
+  type            String
+  provider        String
+  providerAccount String
+  refreshToken    String?
+  accessToken     String?
+  expiresAt       Int?
+  tokenType       String?
+  scope           String?
+  idToken         String?
+  sessionState    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccount])
+  @@index([userId])
+  @@map("account")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  sessionToken String  @unique
+  userId    String
+  expires   DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([sessionToken])
+  @@map("session")
+}
+
+model VerificationToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  user   User   @relation(fields: [email], references: [email], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([email, token])
+  @@map("verification_token")
+}
+
+model TwoFactorAuthentication {
+  id      String  @id @default(cuid())
+  userId  String
+  secret  String
+  enabled Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("two_factor_authentication")
+}
+
+// ============================================================================
+// Multi-Tenancy Models
+// ============================================================================
+
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  image       String?
+  slug        String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  members      OrganizationMember[]
+  transactions Transaction[]
+
+  @@index([slug])
+  @@map("organization")
+}
+
+model OrganizationMember {
+  id             String   @id @default(cuid())
+  userId         String
+  organizationId String
+  role           String   @default("member") // owner, admin, member
+  joinedAt       DateTime @default(now())
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+  @@index([userId])
+  @@index([organizationId])
+  @@map("organization_member")
+}
+
+// ============================================================================
+// Business Models
+// ============================================================================
+
+model Transaction {
+  id               String   @id @default(cuid())
+  userId           String
+  organizationId   String
+  date             DateTime
+  description      String
+  amount           Decimal  @db.Decimal(12, 2)
+  type             String   // "debit" or "credit"
+  category         String?
+  balance          Decimal? @db.Decimal(12, 2)
+  confidence       Float    @default(0.0) // 0.0 - 1.0
+  rawText          String?  // Store original parsed text
+  metadata         Json?    // Store any extra parsing metadata
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([organizationId])
+  @@index([date])
+  @@index([createdAt])
+  @@index([userId, organizationId, date])
+  @@map("transaction")
+}
+
+// ============================================================================
+// Audit Log Model (optional but good for compliance)
+// ============================================================================
+
+model AuditLog {
+  id             String   @id @default(cuid())
+  userId         String
+  organizationId String
+  action         String   // "CREATE", "READ", "UPDATE", "DELETE", "LOGIN"
+  resource       String   // "transaction", "user", etc.
+  resourceId     String?
+  changes        Json?    // Store old/new values for updates
+  ip             String?
+  userAgent      String?
+
+  createdAt      DateTime @default(now())
+
+  @@index([userId])
+  @@index([organizationId])
+  @@index([createdAt])
+  @@map("audit_log")
+}
+
