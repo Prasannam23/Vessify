@@ -16,6 +16,7 @@ app.use(logger());
 const corsOriginList = env.CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean);
 const allowedOrigins = Array.from(new Set([...(corsOriginList || []), env.FRONTEND_URL].filter(Boolean)));
 
+// Hono CORS middleware (same behavior as local)
 app.use(
   cors({
     origin: (origin, _c) => {
