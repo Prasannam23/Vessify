@@ -12,8 +12,9 @@ const app = new Hono();
 
 app.use(logger());
 
-// Allow multiple origins via comma-separated CORS_ORIGIN (e.g., "https://a.app,https://b.app")
-const allowedOrigins = env.CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean);
+// Allow multiple origins via comma-separated CORS_ORIGIN and include FRONTEND_URL as fallback
+const corsOriginList = env.CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean);
+const allowedOrigins = Array.from(new Set([...(corsOriginList || []), env.FRONTEND_URL].filter(Boolean)));
 
 app.use(
   cors({

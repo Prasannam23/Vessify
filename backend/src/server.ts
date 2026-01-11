@@ -20,6 +20,9 @@ console.log(`Server running on http://localhost:${port}`);
 console.log(`Health check available at http://localhost:${port}/health`);
 console.log(`Authentication endpoints at /api/auth`);
 console.log(`Transaction endpoints at /api/transactions`);
+console.log(`NODE_ENV=${env.NODE_ENV}`);
+console.log(`CORS_ORIGIN=${env.CORS_ORIGIN}`);
+console.log(`FRONTEND_URL=${env.FRONTEND_URL}`);
 
 // Graceful shutdown
 process.on("SIGINT", async () => {
