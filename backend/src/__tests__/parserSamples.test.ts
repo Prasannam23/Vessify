@@ -1,4 +1,4 @@
-import { parseTransactionText } from "@services/transactionParser";
+import { parseTransactionText } from "../services/transactionParser.js";
 
 describe("Parser - Assignment Sample Texts", () => {
   it("Sample 1: Starbucks multi-line format", () => {

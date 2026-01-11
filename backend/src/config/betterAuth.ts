@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import prisma from "@/db/prisma";
-import { env } from "@/config/env";
+import prisma from "../db/prisma.js";
+import { env } from "./env.js";
 
 /**
  * Better Auth Configuration

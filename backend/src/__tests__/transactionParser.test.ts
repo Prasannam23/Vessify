@@ -1,4 +1,4 @@
-import { parseTransactionText, parseTransactionsWithFallbacks, calculateBatchConfidence } from "@services/transactionParser";
+import { parseTransactionText, parseTransactionsWithFallbacks, calculateBatchConfidence } from "../services/transactionParser.js";
 import type { ParsedTransaction } from "types";
 
 describe("Transaction Parser Service", () => {

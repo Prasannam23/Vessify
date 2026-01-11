@@ -1,5 +1,5 @@
 import { describe, it, expect } from "@jest/globals";
-import { parseTransactionText } from "@services/transactionParser";
+import { parseTransactionText } from "../services/transactionParser.js";
 
 describe("Transaction Extraction and Validation Tests", () => {
 
