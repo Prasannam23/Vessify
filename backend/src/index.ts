@@ -17,9 +17,9 @@ const allowedOrigins = env.CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Bo
 
 app.use(
   cors({
-    origin: (origin) => {
-      if (!origin) return false;
-      return allowedOrigins.includes(origin);
+    origin: (origin, _c) => {
+      if (!origin) return null;
+      return allowedOrigins.includes(origin) ? origin : null;
     },
     credentials: true,
     allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
