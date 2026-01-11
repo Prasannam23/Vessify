@@ -3,11 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "../db/prisma.js";
 import { env } from "./env.js";
 
-/**
- * Better Auth Configuration
- * Using Prisma adapter for database integration
- * Primary purpose: Database schema support, session management, and auth infrastructure
- */
+
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
@@ -20,11 +16,11 @@ export const auth = betterAuth({
     requireEmailVerification: false,
   },
   session: {
-    expiresIn: 7 * 24 * 60 * 60, // 7 days
-    updateAge: 24 * 60 * 60, // Update every 24 hours
+    expiresIn: 7 * 24 * 60 * 60, 
+    updateAge: 24 * 60 * 60, 
     cookieCache: {
       enabled: true,
-      maxAge: 5 * 60, // 5 minutes
+      maxAge: 5 * 60, 
     },
   },
 });
@@ -40,9 +36,7 @@ export async function hashPassword(password: string): Promise<string> {
   return bcryptjs.hash(password, salt);
 }
 
-/**
- * Helper function to verify password
- */
+
 export async function verifyPassword(
   password: string,
   hashedPassword: string

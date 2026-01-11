@@ -5,10 +5,7 @@ import { verifyToken } from "../utils/token.js";
 import { setRequestContext } from "../db/context.js";
 import type { AuthContext } from "types";
 
-/**
- * Authentication middleware
- * Verifies JWT token (compatible with Better Auth) and attaches user context to request
- */
+
 export const authMiddleware = createMiddleware(async (c: Context, next: Next) => {
   try {
     const authHeader = c.req.header("Authorization");

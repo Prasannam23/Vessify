@@ -6,7 +6,7 @@ async function seed() {
   console.log("🌱 Seeding database...");
 
   try {
-    // Create test organizations
+   
     const org1 = await prisma.organization.upsert({
       where: { slug: "test-org-1" },
       update: {},
@@ -27,7 +27,7 @@ async function seed() {
       },
     });
 
-    // Create test users
+   
     const hashed1 = await bcrypt.hash("password123", 10);
     const user1 = await prisma.user.upsert({
       where: { email: "testuser1@example.com" },
@@ -52,7 +52,7 @@ async function seed() {
       },
     });
 
-    // Add users to organizations
+    
     await prisma.organizationMember.upsert({
       where: {
         userId_organizationId: {
@@ -83,7 +83,7 @@ async function seed() {
       },
     });
 
-    // Create sample transactions for user1/org1
+    
     await prisma.transaction.create({
       data: {
         userId: user1.id,

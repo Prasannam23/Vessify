@@ -26,13 +26,10 @@ export function setRequestContext(context: RequestContext) {
  * Get context from current request
  */
 export function getRequestContext(): RequestContext | undefined {
-  // this is returning the state which is kept in the store for api support
   return requestContext.getStore();
 }
 
-/**
- * Run a function with specific context
- */
+
 export async function withContext<T>(
   context: RequestContext,
   fn: () => Promise<T>
