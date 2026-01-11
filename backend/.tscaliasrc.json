@@ -1,0 +1,13 @@
+{
+  "baseUrl": "./dist",
+  "paths": {
+    "@config/*": ["./config/*"],
+    "@db/*": ["./db/*"],
+    "@services/*": ["./services/*"],
+    "@routes/*": ["./routes/*"],
+    "@middleware/*": ["./middleware/*"],
+    "@types/*": ["./types/*"],
+    "@utils/*": ["./utils/*"],
+    "@/*": ["./*"]
+  }
+}

@@ -1,15 +1,15 @@
 import { Hono, type Context } from "hono";
 import { z } from "zod";
-import { protectedRoute } from "@middleware/auth";
-import { rateLimit } from "@middleware/rateLimit";
-import { parseTransactionsWithFallbacks } from "@services/transactionParser";
+import { protectedRoute } from "../middleware/auth.js";
+import { rateLimit } from "../middleware/rateLimit.js";
+import { parseTransactionsWithFallbacks } from "../services/transactionParser.js";
 import {
   saveTransactions,
   getUserTransactions,
   getTransactionStats,
   deleteTransaction,
   updateTransaction,
-} from "@services/transactionDb";
+} from "../services/transactionDb.js";
 import type { AuthContext, ApiResponse } from "types";
 import type { Transaction } from "@prisma/client";
 

@@ -1,8 +1,8 @@
 import { Context, Next } from "hono";
 import { createMiddleware } from "hono/factory";
-import prisma from "@db/prisma";
-import { verifyToken } from "@utils/token";
-import { setRequestContext } from "@db/context";
+import prisma from "../db/prisma.js";
+import { verifyToken } from "../utils/token.js";
+import { setRequestContext } from "../db/context.js";
 import type { AuthContext } from "types";
 
 /**

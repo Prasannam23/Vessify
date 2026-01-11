@@ -37,7 +37,7 @@ export function decimalToStringExtension() {
  * Logs CREATE/UPDATE/DELETE operations on Transaction model to AuditLog
  * Uses AsyncLocalStorage request context when available; falls back to record fields
  */
-import { getRequestContext } from "@db/context";
+import { getRequestContext } from "./context.js";
 
 export function autoAuditLoggingExtension() {
   return Prisma.defineExtension((client) =>

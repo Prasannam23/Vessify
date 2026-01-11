@@ -1,8 +1,8 @@
 import { Hono, type Context } from "hono";
-import prisma from "@db/prisma";
+import prisma from "../db/prisma.js";
 import { z } from "zod";
-import { hashPassword, verifyPassword } from "@config/betterAuth";
-import { createToken, verifyToken } from "@utils/token";
+import { hashPassword, verifyPassword } from "../config/betterAuth.js";
+import { createToken, verifyToken } from "../utils/token.js";
 import type { ApiResponse } from "types";
 
 const authRoutes = new Hono();

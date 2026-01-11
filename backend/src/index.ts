@@ -1,10 +1,10 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { env } from "@config/env";
-import { authMiddleware } from "@middleware/auth";
-import authRoutes from "@routes/auth";
-import transactionRoutes from "@routes/transactions";
+import { env } from "./config/env.js";
+import { authMiddleware } from "./middleware/auth.js";
+import authRoutes from "./routes/auth.js";
+import transactionRoutes from "./routes/transactions.js";
 
 const app = new Hono();
 

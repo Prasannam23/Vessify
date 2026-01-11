@@ -1,7 +1,7 @@
-import prisma from "@db/prisma";
-import type { ParsedTransaction, PaginationParams } from "types";
+import prisma from "../db/prisma.js";
+import type { ParsedTransaction, PaginationParams } from "../types/index.js";
 import { Decimal } from "@prisma/client/runtime/library";
-import { validateUserOrgAccess } from "@services/userService";
+import { validateUserOrgAccess } from "./userService.js";
 
 /**
  * Transaction Database Service

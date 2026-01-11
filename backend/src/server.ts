@@ -1,6 +1,6 @@
 import app from "./index.js";
-import { env } from "@config/env";
-import prisma from "@db/prisma";
+import { env } from "./config/env.js";
+import prisma from "./db/prisma.js";
 import { serve } from "@hono/node-server";
 
 const port = env.PORT;
