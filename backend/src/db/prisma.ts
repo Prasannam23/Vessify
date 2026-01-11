@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { decimalToStringExtension, autoAuditLoggingExtension } from "./prismaExtensions";
+import { decimalToStringExtension, autoAuditLoggingExtension } from "./prismaExtensions.js";
 
 let prisma: any;
 
