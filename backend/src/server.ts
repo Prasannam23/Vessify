@@ -2,6 +2,7 @@ import app from "./index.js";
 import { env } from "./config/env.js";
 import prisma from "./db/prisma.js";
 import { serve } from "@hono/node-server";
+import { startKeepalive } from "./utils/keepalive.js";
 
 const port = env.PORT;
 
@@ -10,32 +11,37 @@ serve({
   port,
 });
 
-console.log(`🚀 Server running on http://localhost:${port}`);
-console.log(`📊 Health check: http://localhost:${port}/health`);
-console.log(`🔐 Auth routes at /api/auth`);
-console.log(`💰 Transaction routes at /api/transactions`);
+// Start health check keepalive to prevent instance sleep
+if (env.NODE_ENV === "production") {
+  startKeepalive();
+}
+
+console.log(`Server running on http://localhost:${port}`);
+console.log(`Health check available at http://localhost:${port}/health`);
+console.log(`Authentication endpoints at /api/auth`);
+console.log(`Transaction endpoints at /api/transactions`);
 
 // Graceful shutdown
 process.on("SIGINT", async () => {
-  console.log("\n🛑 Shutting down gracefully...");
+  console.log("Shutting down gracefully...");
   await prisma.$disconnect();
   process.exit(0);
 });
 
 process.on("SIGTERM", async () => {
-  console.log("\n🛑 Shutting down gracefully...");
+  console.log("Shutting down gracefully...");
   await prisma.$disconnect();
   process.exit(0);
 });
 
 // Handle uncaught errors
 process.on("uncaughtException", (error) => {
-  console.error("❌ Uncaught Exception:", error);
+  console.error("Uncaught exception:", error);
   process.exit(1);
 });
 
 process.on("unhandledRejection", (reason) => {
-  console.error("❌ Unhandled Rejection:", reason);
+  console.error("Unhandled promise rejection:", reason);
   process.exit(1);
 });
 

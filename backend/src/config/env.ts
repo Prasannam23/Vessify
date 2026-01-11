@@ -23,7 +23,7 @@ export function getConfig(): EnvConfig {
     const result = envSchema.safeParse(process.env);
     
     if (!result.success) {
-      console.error("❌ Environment validation failed:");
+      console.error("Environment validation failed:");
       result.error.errors.forEach((err) => {
         console.error(`  - ${err.path.join(".")}: ${err.message}`);
       });

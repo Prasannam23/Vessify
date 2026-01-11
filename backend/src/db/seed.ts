@@ -129,12 +129,12 @@ async function seed() {
       },
     });
 
-    console.log("✅ Seed completed successfully!");
+    console.log("Database seed completed successfully");
     console.log("📋 Test Users:");
     console.log(`   - Email: testuser1@example.com / password123 (Organization: ${org1.name})`);
     console.log(`   - Email: testuser2@example.com / password123 (Organization: ${org2.name})`);
   } catch (error) {
-    console.error("❌ Seed failed:", error);
+    console.error("Database seed failed:", error);
     process.exit(1);
   }
 }
