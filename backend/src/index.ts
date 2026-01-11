@@ -16,13 +16,13 @@ app.use(logger());
 const corsOriginList = env.CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean);
 const allowedOrigins = Array.from(new Set([...(corsOriginList || []), env.FRONTEND_URL].filter(Boolean)));
 
-// Hono CORS middleware (same behavior as local)
+console.log("Allowed CORS origins:", allowedOrigins);
+
+// Hono CORS middleware - use string array for better compatibility
 app.use(
+  "*",
   cors({
-    origin: (origin, _c) => {
-      if (!origin) return null;
-      return allowedOrigins.includes(origin) ? origin : null;
-    },
+    origin: allowedOrigins,
     credentials: true,
     allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowHeaders: ["Content-Type", "Authorization"],
