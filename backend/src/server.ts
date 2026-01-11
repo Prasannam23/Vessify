@@ -1,4 +1,4 @@
-import app from "./index";
+import app from "./index.js";
 import { env } from "@config/env";
 import prisma from "@db/prisma";
 import { serve } from "@hono/node-server";
