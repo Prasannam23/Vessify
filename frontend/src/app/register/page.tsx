@@ -24,11 +24,10 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-indigo-50"></div>
-      <div className="w-full max-w-md px-4 relative z-10">
+    <div className="flex h-screen items-center justify-center bg-background">
+      <div className="w-full max-w-md px-4">
         <div className="mb-8 text-center">
-          <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Vessify</h1>
+          <h1 className="mb-2 text-3xl font-bold">Vessify</h1>
           <p className="text-muted-foreground">
             Create your account to get started
           </p>

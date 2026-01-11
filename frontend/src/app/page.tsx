@@ -40,15 +40,13 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm shadow-sm">
+      <header className="border-b bg-card">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
           <div className="flex items-center gap-2">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2 rounded-lg">
-              <Home className="h-5 w-5 text-white" />
-            </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Vessify</h1>
+            <Home className="h-6 w-6" />
+            <h1 className="text-2xl font-bold">Vessify</h1>
           </div>
           <div className="flex items-center gap-4">
             <div className="text-sm">
