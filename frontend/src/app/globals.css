@@ -47,9 +47,7 @@
     --input: 217 33% 17%;
     --ring: 224 76% 48%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
@@ -58,5 +56,4 @@
     @apply bg-background text-foreground;
   }
 }
-  }
-}
+
