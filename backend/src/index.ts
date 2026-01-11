@@ -12,9 +12,15 @@ const app = new Hono();
 
 app.use(logger());
 
+// Allow multiple origins via comma-separated CORS_ORIGIN (e.g., "https://a.app,https://b.app")
+const allowedOrigins = env.CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean);
+
 app.use(
   cors({
-    origin: env.CORS_ORIGIN,
+    origin: (origin) => {
+      if (!origin) return false;
+      return allowedOrigins.includes(origin);
+    },
     credentials: true,
     allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowHeaders: ["Content-Type", "Authorization"],
