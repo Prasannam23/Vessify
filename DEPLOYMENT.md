@@ -1,5 +1,209 @@
 # Deployment Guide
 
+This guide covers deploying Vessify to production for both backend (Hono + Prisma + PostgreSQL) and frontend (Next.js), with exact commands, environment variables, and isolation verification.
+
+## Overview
+- Backend: Hono server with Prisma ORM and PostgreSQL
+- Frontend: Next.js app (Vercel-ready)
+
+## Quick Deploy Checklist
+- Set up PostgreSQL (managed service)
+- Generate secure secrets (BETTER_AUTH_SECRET, BETTER_AUTH_JWT_SECRET, JWT_SECRET)
+- Configure environment variables (backend and frontend)
+- Apply Prisma migrations (`migrate deploy`)
+- Deploy backend (Render/Railway)
+- Deploy frontend (Vercel)
+- Verify health and isolation
+
+## Backend Deployment (Render Recommended)
+
+1) Push code to GitHub
+```bash
+git push origin main
+```
+
+2) Create PostgreSQL on Render
+- Go to https://render.com → New → PostgreSQL
+- Copy `Internal Database URL` (preferred) as `DATABASE_URL`
+
+3) Create Web Service (backend)
+- New → Web Service → Connect repo → root `backend`
+- Build Command: `npm install && npm run build`
+- Start Command: `node dist/server.js`
+- Node Version: `18`
+
+4) Environment Variables (Render → Backend Service)
+```
+DATABASE_URL=<postgres-connection-string-from-Render>
+
+# Secrets (generate with: openssl rand -base64 32)
+BETTER_AUTH_SECRET=<32+ chars>
+BETTER_AUTH_JWT_SECRET=<32+ chars>
+JWT_SECRET=<32+ chars>
+BETTER_AUTH_JWT_EXPIRES_IN=7d
+
+# Server Config
+PORT=3001
+NODE_ENV=production
+BETTER_AUTH_URL=https://<your-backend>.onrender.com
+
+# CORS & Frontend URLs
+CORS_ORIGIN=https://<your-frontend>.vercel.app
+FRONTEND_URL=https://<your-frontend>.vercel.app
+```
+
+5) Apply Prisma migrations (production-safe)
+```bash
+npx prisma migrate deploy
+```
+Optional seed (for demo only):
+```bash
+npm run db:seed
+```
+
+6) Deploy
+- Render builds and deploys on push
+- Verify logs show server started and health endpoint responsive
+
+## Backend Deployment (Railway Alternative)
+
+1) Connect repo and create PostgreSQL service.
+2) Create Node service for `backend` root.
+3) Configure:
+```
+Build Command: npm install && npm run build
+Start Command: node dist/server.js
+Node Version: 18
+```
+4) Add environment variables (same as Render section).
+5) Apply migrations:
+```bash
+npx prisma migrate deploy
+```
+
+## Notes on Prisma in Production
+- Use `npx prisma migrate deploy` to apply committed migrations.
+- Ensure `prisma/migrations` are pushed to Git.
+- Avoid `db push` in production except for non-critical demos.
+
+## Frontend Deployment (Vercel)
+
+1) Push to GitHub
+```bash
+git push origin main
+```
+
+2) Import project in Vercel
+- https://vercel.com → New Project → select repo
+- Set root directory to `frontend`
+
+3) Environment Variables (Vercel → Project → Settings → Environment Variables)
+```
+NEXT_PUBLIC_API_URL=https://<your-backend>.onrender.com
+NEXT_PUBLIC_APP_URL=https://<your-frontend>.vercel.app
+```
+
+4) Deploy
+- Vercel auto-deploys on push
+- Confirm the app loads and can call the backend
+
+## Database Setup & Verification
+
+After backend is live (Render/Railway shell or SSH):
+```bash
+# Apply migrations
+npx prisma migrate deploy
+
+# Optional: seed demo users/transactions
+npm run db:seed
+
+# Inspect data
+npx prisma studio
+```
+
+## Environment Variables Reference
+
+Backend:
+```
+DATABASE_URL=postgresql://user:pass@host:5432/db
+BETTER_AUTH_SECRET=<32+ chars>
+BETTER_AUTH_JWT_SECRET=<32+ chars>
+JWT_SECRET=<32+ chars>
+BETTER_AUTH_JWT_EXPIRES_IN=7d
+PORT=3001
+NODE_ENV=production
+BETTER_AUTH_URL=https://your-backend.com
+CORS_ORIGIN=https://your-frontend.com
+FRONTEND_URL=https://your-frontend.com
+```
+
+Frontend:
+```
+NEXT_PUBLIC_API_URL=https://your-backend.com
+NEXT_PUBLIC_APP_URL=https://your-frontend.com
+```
+
+## Testing Production & Isolation
+
+Health:
+```bash
+curl https://your-backend.com/health
+```
+
+Register:
+```bash
+curl -X POST https://your-backend.com/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"TestPass123"}'
+```
+
+Login (get token):
+```bash
+curl -X POST https://your-backend.com/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"testuser1@example.com","password":"password123"}'
+```
+
+Extract transactions:
+```bash
+curl -X POST https://your-backend.com/api/transactions/extract \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"text":"Date: 11 Dec 2025\nSTARBUCKS COFFEE\nAmount: -420.00"}'
+```
+
+Verify isolation (attempt cross-user delete should fail):
+```bash
+curl -i -X DELETE https://your-backend.com/api/transactions/<user1_txn_id> \
+  -H "Authorization: Bearer <user2_token>"
+```
+
+## Monitoring & Maintenance
+- Logs: Render/Railway dashboards
+- Backups: enable managed DB backups
+- Health: monitor `GET /health` (HTTP 200)
+- Alerts: deployment failures, error rate, DB connectivity, API latency
+
+## Rollback Strategy
+Frontend (Vercel): promote previous deployment to production.
+Backend (Render/Railway): redeploy previous commit or switch service version.
+
+## Cost (Indicative)
+- PostgreSQL: $5–$15
+- Backend service: $5–$10
+- Frontend CDN: $0–$5
+- Total: ~$10–$30 for small loads
+
+## References
+- Prisma Deploy: https://www.prisma.io/docs/guides/deployment
+- Render Docs: https://render.com/docs
+- Railway Docs: https://docs.railway.app
+- Vercel Docs: https://vercel.com/docs
+
+---
+
+See main [README.md](README.md) and backend [README.md](backend/README.md) for local run commands, seeded users, and isolation demo.# Deployment Guide
+
 This guide covers deploying Vessify to production across multiple platforms.
 
 ## Overview
