@@ -25,10 +25,7 @@ export const auth = betterAuth({
   },
 });
 
-/**
- * Helper function to hash password using Better Auth's internal mechanism
- * Better Auth uses bcryptjs internally
- */
+
 import bcryptjs from "bcryptjs";
 
 export async function hashPassword(password: string): Promise<string> {

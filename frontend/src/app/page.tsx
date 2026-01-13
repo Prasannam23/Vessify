@@ -74,7 +74,7 @@ export default function DashboardPage() {
               Transaction Dashboard
             </h2>
             <p className="text-muted-foreground">
-              Extract and manage your bank transactions with AI-powered parsing
+              Extract and manage your bank transactions with parsing
             </p>
           </div>
 

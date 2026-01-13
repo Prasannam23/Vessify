@@ -12,17 +12,9 @@ const app = new Hono();
 
 app.use(logger());
 
-// Allow multiple origins via comma-separated CORS_ORIGIN and include FRONTEND_URL as fallback
-const corsOriginList = env.CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean);
-const allowedOrigins = Array.from(new Set([...(corsOriginList || []), env.FRONTEND_URL].filter(Boolean)));
-
-console.log("Allowed CORS origins:", allowedOrigins);
-
-// Hono CORS middleware - use string array for better compatibility
 app.use(
-  "*",
   cors({
-    origin: allowedOrigins,
+    origin: env.CORS_ORIGIN,
     credentials: true,
     allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowHeaders: ["Content-Type", "Authorization"],
